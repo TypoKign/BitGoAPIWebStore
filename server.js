@@ -1,9 +1,22 @@
 const express = require("express");
-const app = express();
 const port = 80;
 
+const path = require("path")
+const handlebars = require("express-handlebars")
+
+const app = express();
+
+app.engine('.hbs', handlebars({
+    defaultLayout: 'main',
+    extname: '.hbs',
+    layoutsDir: path.join(__dirname, 'views/layouts')
+}))
+
+app.set('view engine', '.hbs')
+app.set('views', path.join(__dirname, 'views'))
+
 app.get('/', (request, response) => {
-    response.send("Hello World!")
+    response.render('home')
 })
 
 app.listen(port, (err) => {
