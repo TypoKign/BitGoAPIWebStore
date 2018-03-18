@@ -46,19 +46,31 @@
             <div class="mdl-card__actions mdl-card--border">
               <table>
                 <tr>
-                  <td style="width: 75%"><b>{{product.price | currency}}</b></td>
                   <td>
-                      <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" ng-click="itemsInCart = itemsInCart + 1" style="text-align: right">
-                        Add to Cart
-                      </a>
+                    <b>{{product.price | currency}} USD</b>
+                    <span>|</span>
+                  </td>
+                  <td ng-repeat="currency in currencies">
+                    <b>{{product.price / currency.exchangeRate | number}}</b>
+                    <img src="{{currency.icon}}" alt="{{currency.ticker | uppercase}} style="fill: {{currency.iconColor}}; height="18px">
+                    <span ng-if="!$last">|</span>
                   </td>
                 </tr>
               </table>
-              
+            </div>
+            <div class="mdl-card__menu">
+              <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" ng-click="addToCart(product.name)">
+                <i class="material-icons">add_shopping_cart</i>
+              </button>
             </div>
           </div>
           <!-- End product cards -->
 
+        </div>
+        <!-- "Add to cart" Snackbar -->
+        <div id="add-to-cart-snackbar" class="mdl-js-snackbar mdl-snackbar">
+          <div class="mdl-snackbar__text"></div>
+          <button class="mdl-snackbar__action" type="button"></button>
         </div>
       </main>
     </div>
