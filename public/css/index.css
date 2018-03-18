@@ -1,0 +1,15 @@
+.product-card.mdl-card {
+    width: 512px;
+    margin: 60px;
+    float: left;
+}
+
+.product-card > .mdl-card__title {
+    color: #ffffff;
+    height: 176px;
+    background: url('https://random.dog/ba2a3ac0-65e1-4955-9aea-85cfed9cc325.jpg') center / cover;
+}
+
+.product-card > .mdl-card__menu {
+    color: #ffffff;
+}

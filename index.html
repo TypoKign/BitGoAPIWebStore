@@ -1,12 +1,66 @@
+<!doctype html>
 <html ng-app="root">
   <head>
     <title>Web Store</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="js/root.js"></script>
+    <link rel="stylesheet" href="/css/index.css">
+
+    <!--Material Design Lite library -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-orange.min.css" />    
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   </head>
-  <body>
-    <div ng-controller="index">
-        <p>{{message}}</p>
+  <body ng-controller="index">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <!-- Purple header -->
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title">Web Store</span>
+          <div class="mdl-layout-spacer"></div>
+          <nav class="mdl-navigation mdl-layout--large-screen-only">
+            <!-- Right header links -->
+            <a class="mdl-navigation__link" href="">About</a>
+            <a class="mdl-navigation__link" href=""><div class="material-icons mdl-badge mdl-badge--overlap" data-badge="{{itemsInCart}}">shopping_cart</div></a>
+          </nav>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Web Store</span>
+        <nav class="mdl-navigation">
+          <!-- Sidebar links -->
+          <a class="mdl-navigation__link" href="">Category 1</a>
+          <a class="mdl-navigation__link" href="">Category 2</a>
+        </nav>
+      </div> 
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          <!-- MAIN PAGE CONTENT -->
+
+          <!-- Product cards repeated with ngRepeat -->
+          <div class="product-card mdl-card mdl-shadow--2dp" ng-repeat="product in products">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text">{{product.name}}</h2>
+            </div>
+            <div class="mdl-card__supporting-text">{{product.description}}</div>
+            <div class="mdl-card__actions mdl-card--border">
+              <table>
+                <tr>
+                  <td style="width: 75%"><b>{{product.price | currency}}</b></td>
+                  <td>
+                      <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" ng-click="itemsInCart = itemsInCart + 1" style="text-align: right">
+                        Add to Cart
+                      </a>
+                  </td>
+                </tr>
+              </table>
+              
+            </div>
+          </div>
+          <!-- End product cards -->
+
+        </div>
+      </main>
     </div>
   </body>
 </html>
