@@ -1,21 +1,10 @@
-.product-card.mdl-card {
-    width: 512px;
-    margin: 20px auto 20px auto;
-    float: left;
+.product-card {
+    width: 550px;
+    margin: 10px auto;
+    cursor: pointer;
 }
 
-.product-card > .mdl-card__title {
-    color: #ffffff;
-    height: 176px;
-    background: url('https://random.dog/ba2a3ac0-65e1-4955-9aea-85cfed9cc325.jpg') center / cover;
-}
-
-.product-card > .mdl-card__menu {
-    color: #ffffff;
-}
-
-.page-content {
-    display: flex;
-    flex-flow: wrap;
-    margin: 0 auto;
+.product-card > .md-card-image   {
+    height: 256px;
+    object-fit: cover;
 }
