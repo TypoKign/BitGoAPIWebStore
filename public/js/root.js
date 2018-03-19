@@ -1,11 +1,17 @@
 var rootModule = angular.module('root', ['ngMaterial'])
 
-rootModule.controller("index", function ($scope, $mdSidenav, $mdDialog, $mdToast) {
+function ProductInfoController($scope, product, currencies, addToCart) {
+    $scope.product = product
+    $scope.currencies = currencies
+    $scope.addToCart = addToCart
+}
+
+function IndexController($scope, $mdSidenav, $mdDialog, $mdToast) {
     $scope.itemsInCart = 0 // Shown as a badge on the shopping cart icon (top right)
     $scope.products = [ // List of products to populate the product cards
         {
             name: "Product 1",
-            description: "First product",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
             price: 99.99
         },
         {
@@ -93,11 +99,28 @@ rootModule.controller("index", function ($scope, $mdSidenav, $mdDialog, $mdToast
         })
     }
 
-    // Add to cart and snackbar logic
-    $scope.addToCart = function(productName) {
-        $mdToast.show($mdToast.simple().textContent(`Added ${productName} to cart!`))
+    $scope.showProductInfo = function($event, product) {
+        $mdDialog.show({
+            parent: angular.element(document.body),
+            targetEvent: $event,
+            templateUrl: '/product-info.html',
+            clickOutsideToClose: true,
+            locals: {
+                product: product,
+                currencies: $scope.currencies,
+                addToCart: $scope.addToCart
+            }, controller: ProductInfoController
+        })
     }
-})
+
+    // Add to cart and snackbar logic
+    $scope.addToCart = function(productName, amount) {
+        amount = amount || 1
+        $mdToast.show($mdToast.simple().textContent(`Added ${amount} × ${productName} to cart!`)) // unicode times character
+    }
+}
+
+rootModule.controller("index", IndexController)
 
 // Set the color theme of Angular Material
 rootModule.config(function ($mdThemingProvider) {

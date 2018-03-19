@@ -52,28 +52,26 @@
         <!-- Main page content -->
         <div layout="row" flex layout-wrap>
           <!-- Product cards -->
-          <md-card ng-repeat="product in products" class="product-card" ng-click="null">
+          <md-card ng-repeat="product in products" class="product-card" ng-click="showProductInfo($event, product)">
             <img src="https://random.dog/ba2a3ac0-65e1-4955-9aea-85cfed9cc325.jpg" class="md-card-image" alt="{{product.name}}">
             <md-card-content>
               <h2>{{product.name}}</h2>
-              <p>{{product.description}}</p>
+              <p class="product-description-trunc">{{product.description}}</p>
             </md-card-content>
             <md-card-footer>
               <!-- Available currencies -->
-              <table>
-                <td>
-                  <b>{{product.price | currency}} USD</b>
-                  <span>|</span>
-                </td>
-                <td ng-repeat = "currency in currencies">
-                  <b style="vertical-align:middle">{{product.price / currency.exchangeRate | number}}</b>
-                  <img src="{{currency.icon}}" alt="{{currency.ticker | uppercase}}" height="20px" style="vertical-align:middle">
-                  <span ng-if="!$last" style="vertical-align:middle">|</span>
-                </td>
+              <table width="100%">
+                  <td flex align="center">
+                      <b>{{product.price | currency}} USD</b>
+                  </td>
+                  <td flex ng-repeat="currency in currencies" align="center">
+                      <b style="vertical-align:middle">{{product.price / currency.exchangeRate | number}}</b>
+                      <img src="{{currency.icon}}" alt="{{currency.ticker | uppercase}}" height="20px" style="vertical-align:middle">
+                  </td>
               </table>
             </md-card-footer>
             <md-card-actions layout="row" layout-align="end center">
-              <md-button class="md-raised md-accent" ng-click="addToCart(product.name)">Add to Cart</md-button>
+              <md-button class="md-raised md-accent" ng-click="$event.stopPropagation(); addToCart(product.name, 1)">Add to Cart</md-button>
             </md-card-actions>
           </md-card>
         </div>

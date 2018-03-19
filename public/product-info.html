@@ -1,0 +1,33 @@
+<!-- Fetched when the user clicks a product card for more information -->
+
+<md-dialog flex="50">
+    <md-dialog-content>
+        <div layout="column">
+            <img src="https://random.dog/ba2a3ac0-65e1-4955-9aea-85cfed9cc325.jpg" alt="{{product.name}}" class="product-info-image">
+            <div layout="column" layout-margin>
+                <h2 flex="" md-truncate="">{{product.name}}</h2>
+                <p>{{product.description}}</p>
+                <md-divider></md-divider>
+                <table width="100%">
+                    <td flex align="center">
+                        <b>{{product.price * (quantity || 1) | currency}} USD</b>
+                    </td>
+                    <td flex ng-repeat="currency in currencies" align="center">
+                        <b style="vertical-align:middle">{{product.price * (quantity || 1) / currency.exchangeRate | number}}</b>
+                        <img src="{{currency.icon}}" alt="{{currency.ticker | uppercase}}" height="20px" style="vertical-align:middle">
+                    </td>
+                </table>
+                <md-divider></md-divider>
+                <div layout="row" flex layout-align="end">
+                    <md-input-container flex="25" flex-offset="50">
+                        <label>Quantity</label>
+                        <input type="number" ng-model="quantity" value="1" min=1>
+                    </md-input-container>
+                    <div>
+                        <md-button class="md-fab md-accent" ng-click="addToCart(product.name, quantity)"><md-icon>add_shopping_cart</md-icon></md-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+</md-dialog>
