@@ -6,7 +6,7 @@ function ProductInfoController($scope, product, currencies, addToCart) {
     $scope.addToCart = addToCart
 }
 
-function IndexController($scope, $mdSidenav, $mdDialog, $mdToast) {
+function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToast) {
     $scope.itemsInCart = 0 // Shown as a badge on the shopping cart icon (top right)
     $scope.products = [ // List of products to populate the product cards
         {
@@ -41,43 +41,10 @@ function IndexController($scope, $mdSidenav, $mdDialog, $mdToast) {
         }
     ]
 
-    $scope.currencies = [ // List of supported currencies
-        {
-            name: "bitcoin",
-            ticker: "btc",
-            icon: "/svg/btc.svg",
-            iconColor: "orange",
-            exchangeRate: 10000 // TODO: get from API
-        },
-        {
-            name: "ether",
-            ticker: "eth",
-            icon: "/svg/eth.svg",
-            iconColor: "purple",
-            exchangeRate: 900 // TODO: get from API
-        },
-        {
-            name: "ripple",
-            ticker: "xrp",
-            icon: "/svg/xrp.svg",
-            iconColor: "blue",
-            exchangeRate: 0.80 // TODO: get from API
-        },
-        {
-            name: "bitcoincash",
-            ticker: "bch",
-            icon: "/svg/bch.svg",
-            iconColor: "lightGreen",
-            exchangeRate: 1200 // TODO: get from API
-        },
-        {
-            name: "litecoin",
-            ticker: "ltc",
-            icon: "/svg/ltc.svg",
-            iconColor: "silver",
-            exchangeRate: 200 // TODO: get from API
-        }
-    ]
+    $scope.currencies = []
+    $http.get($location.$$absUrl + "api/currencies").then((response) => {
+        $scope.currencies = response.data
+    })
 
     $scope.productCategories = [
         "Category 1",
