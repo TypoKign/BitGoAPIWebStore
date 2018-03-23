@@ -83,7 +83,7 @@ router.get('/currencies', (req, res) => {
     })
 })
 
-// Allow users to request a list of currencies from MongoDB
+// Allow users to request a list of products from MongoDB
 router.get('/products', (req, res) => {
     res.json(productsDriver.products)
 })
