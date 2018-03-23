@@ -13,7 +13,7 @@
                         <b>{{product.price * (quantity || 1) | currency}} USD</b>
                     </td>
                     <td flex ng-repeat="currency in currencies" align="center">
-                        <b style="vertical-align:middle">{{product.price * (quantity || 1) / currency.exchangeRate | number}}</b>
+                        <b style="vertical-align:middle">{{product.price * (quantity || 1) / currency.exchangeRate | number : 6}}</b>
                         <img src="{{currency.icon}}" alt="{{currency.ticker | uppercase}}" height="20px" style="vertical-align:middle">
                     </td>
                 </table>
