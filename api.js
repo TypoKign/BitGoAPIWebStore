@@ -1,6 +1,16 @@
+/**
+ * api.js
+ * 
+ * Provides an API to the client to request simple data from the server. Also handles requests to the BitGo network
+ * 
+ * BitGo access token to be provided via the bitgoAccessToken environment variable
+ */
+
 const express = require("express")
 const bitgoModule = require("bitgo")
 const Promise = require("bluebird")
+
+const productsDriver = require("./products.js")
 
 const router = express.Router()
 
@@ -71,6 +81,11 @@ router.get('/currencies', (req, res) => {
     }).then(() => {
         res.json(currencies)
     })
+})
+
+// Allow users to request a list of currencies from MongoDB
+router.get('/products', (req, res) => {
+    res.json(productsDriver.products)
 })
 
 // Pass the router to our main router

@@ -1,3 +1,11 @@
+/**
+ * server.js
+ * 
+ * Launches a Node.js Express HTTP server
+ * Serves static files in the /public/ directory
+ * Uses the api.js router for all /api/ requests
+ */
+
 const express = require("express");
 const path = require("path")
 const api = require("./api.js")

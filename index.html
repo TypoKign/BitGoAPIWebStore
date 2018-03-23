@@ -53,7 +53,7 @@
         <div layout="row" flex layout-wrap>
           <!-- Product cards -->
           <md-card ng-repeat="product in products" class="product-card" ng-click="showProductInfo($event, product)">
-            <img src="https://random.dog/ba2a3ac0-65e1-4955-9aea-85cfed9cc325.jpg" class="md-card-image" alt="{{product.name}}">
+            <img src="{{product.image}}" class="md-card-image" alt="{{product.name}}">
             <md-card-content>
               <h2>{{product.name}}</h2>
               <p class="product-description-trunc">{{product.description}}</p>

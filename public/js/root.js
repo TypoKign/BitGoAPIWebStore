@@ -1,3 +1,9 @@
+/**
+ * root.js
+ * 
+ * Served to the client along with index.html. Provides Angular controllers for the home page and product info cards
+ */
+
 var rootModule = angular.module('root', ['ngMaterial'])
 
 function ProductInfoController($scope, product, currencies, addToCart) {
@@ -8,40 +14,11 @@ function ProductInfoController($scope, product, currencies, addToCart) {
 
 function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToast) {
     $scope.itemsInCart = 0 // Shown as a badge on the shopping cart icon (top right)
-    $scope.products = [ // List of products to populate the product cards
-        {
-            name: "Product 1",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            price: 99.99
-        },
-        {
-            name: "Product 2",
-            description: "Second product",
-            price: 9.99
-        },
-        {
-            name: "Product 3",
-            description: "Third product",
-            price: 9.99
-        },
-        {
-            name: "Product 4",
-            description: "Fourth product",
-            price: 99.99
-        },
-        {
-            name: "Product 5",
-            description: "Fifth product",
-            price: 9.99
-        },
-        {
-            name: "Product 6",
-            description: "Sixth product",
-            price: 999.99
-        }
-    ]
 
-    $scope.currencies = []
+    $http.get($location.$$absUrl + "api/products").then((response) => {
+        $scope.products = response.data
+    })
+
     $http.get($location.$$absUrl + "api/currencies").then((response) => {
         $scope.currencies = response.data
     })
