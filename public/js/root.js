@@ -4,7 +4,7 @@
  * Served to the client along with index.html. Provides Angular controllers for the home page and product info cards
  */
 
-var rootModule = angular.module('root', ['ngMaterial'])
+var rootModule = angular.module('root', ['ngMaterial', 'ngMessages'])
 
 function ProductInfoController($scope, product, currencies, addToCart) {
     $scope.product = product

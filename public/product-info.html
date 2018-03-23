@@ -19,12 +19,17 @@
                 </table>
                 <md-divider></md-divider>
                 <div layout="row" flex layout-align="end">
-                    <md-input-container flex="25" flex-offset="50">
-                        <label>Quantity</label>
-                        <input type="number" ng-model="quantity" value="1" min=1>
-                    </md-input-container>
+                        <md-input-container flex="25" flex-offset="50">
+                            <form name="quantityForm">
+                            <label>Quantity</label>
+                            <input name="quantity" type="number" ng-model="quantity" value="1" min=1 ng-pattern="/^[0-9]+$/">
+                            <div ng-messages="quantityForm.quantity.$error">
+                                <div ng-message="pattern">Invalid quantity. Please enter a positive whole number.</div>
+                            </div>
+                            </form>
+                        </md-input-container>
                     <div>
-                        <md-button class="md-fab md-accent" ng-click="addToCart(product.name, quantity)"><md-icon>add_shopping_cart</md-icon></md-button>
+                        <md-button class="md-fab md-accent" ng-disabled="quantityForm.$invalid" ng-click="addToCart(product.name, quantity)"><md-icon>add_shopping_cart</md-icon></md-button>
                     </div>
                 </div>
             </div>
