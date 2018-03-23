@@ -29,6 +29,7 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
         "Category 3",
         "Category 4"
     ]
+    $scope.selectedCategory = "all"
 
     $scope.openSidenav = function() {
         $mdSidenav('sidenav').toggle()
@@ -55,6 +56,10 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
                 addToCart: $scope.addToCart
             }, controller: ProductInfoController
         })
+    }
+
+    $scope.setSelectedCategory = function(category) {
+        $scope.selectedCategory = category
     }
 
     // Add to cart and snackbar logic

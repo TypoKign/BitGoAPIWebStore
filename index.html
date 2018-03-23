@@ -25,8 +25,12 @@
           </div>
         </md-toolbar>
 
+        <h4 style="margin: 16px 16px 8px 16px">Product Categories</h4>
         <md-list>
-          <md-list-item ng-repeat="category in productCategories" ng-click="null">
+          <md-list-item ng-click="setSelectedCategory('all')">
+            All Products
+          </md-list-item>
+          <md-list-item ng-repeat="category in productCategories" ng-click="setSelectedCategory(category)">
             {{category}}
           </md-list-item>
         </md-list>
@@ -52,7 +56,7 @@
         <!-- Main page content -->
         <div layout="row" flex layout-wrap>
           <!-- Product cards -->
-          <md-card ng-repeat="product in products" class="product-card" ng-click="showProductInfo($event, product)">
+          <md-card ng-repeat="product in products" ng-if="selectedCategory === 'all' || selectedCategory === product.category" class="product-card" ng-click="showProductInfo($event, product)">
             <img src="{{product.image}}" class="md-card-image" alt="{{product.name}}">
             <md-card-content>
               <h2>{{product.name}}</h2>

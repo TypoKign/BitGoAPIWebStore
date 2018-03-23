@@ -16,6 +16,7 @@ var mongoose = require("mongoose")
 var productSchema = mongoose.Schema({
     name: String,
     description: String,
+    category: String,
     price: Number,
     image: String
 })
