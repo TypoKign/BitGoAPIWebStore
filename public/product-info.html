@@ -6,7 +6,7 @@
             <img src="{{product.image}}" alt="{{product.name}}" class="product-info-image">
             <div layout="column" layout-margin>
                 <h2 flex="" md-truncate="">{{product.name}}</h2>
-                <p>{{product.description}}</p>
+                <p ng-bind-html="product.description"></p>
                 <md-divider></md-divider>
                 <table width="100%">
                     <td flex align="center">

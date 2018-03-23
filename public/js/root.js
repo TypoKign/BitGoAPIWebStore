@@ -4,7 +4,7 @@
  * Served to the client along with index.html. Provides Angular controllers for the home page and product info cards
  */
 
-var rootModule = angular.module('root', ['ngMaterial', 'ngMessages'])
+var rootModule = angular.module('root', ['ngMaterial', 'ngMessages', 'ngSanitize'])
 
 function ProductInfoController($scope, product, currencies, addToCart) {
     $scope.product = product
@@ -70,6 +70,28 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
 }
 
 rootModule.controller("index", IndexController)
+
+// Word-aware limitTo directive slightly modified from https://stackoverflow.com/a/18096071/4645098
+rootModule.filter('limitToWord', () => {
+    return function(text, length, tail) {
+        if (!text) return '';
+
+        length = parseInt(length, 10)
+        if (!length) return '';
+        if (text.length <= length) return text
+
+        text = text.substr(0, length)
+        var lastSpace = text.lastIndexOf(' ')
+        if (lastSpace !== -1) {
+            if (text.charAt(lastSpace - 1) === '.' || text.charAt(lastSpace - 1) === ',') {
+                lastSpace--
+            }
+            text = text.substr(0, lastSpace)
+        }
+
+        return text + (tail || '&hellip;')
+    }
+})
 
 // Set the color theme of Angular Material
 rootModule.config(function ($mdThemingProvider) {
