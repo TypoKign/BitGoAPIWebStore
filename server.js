@@ -20,11 +20,6 @@ app.use(express.static('public'))
 // Pass control of all /api requests to api.js
 app.use('/api', api.router)
 
-// Serve index.html
-app.get('/', (request, response) => {
-    response.sendFile(path.join(__dirname, '/index.html'))
-})
-
 // Start Express server
 app.listen(port, (err) => {
     if (err) {

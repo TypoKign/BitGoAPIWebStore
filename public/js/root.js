@@ -58,7 +58,7 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
         $mdDialog.show({
             parent: angular.element(document.body),
             targetEvent: $event,
-            templateUrl: '/product-info.html',
+            templateUrl: '/modals/product-info.html',
             clickOutsideToClose: true,
             locals: {
                 product: product,
@@ -73,7 +73,7 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
         $mdDialog.show({
             parent: angular.element(document.body),
             targetEvent: $event,
-            templateUrl: '/cart.html',
+            templateUrl: '/modals/cart.html',
             clickOutsideToClose: true,
             locals: {
                 cart: $scope.cart,
