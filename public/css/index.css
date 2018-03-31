@@ -13,3 +13,8 @@
     height: 512px;
     object-fit: cover;
 }
+
+.caption {
+    color: gray;
+    letter-spacing: 1px;
+}

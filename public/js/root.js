@@ -4,7 +4,7 @@
  * Served to the client along with index.html. Provides Angular controllers for the home page and product info cards
  */
 
-var rootModule = angular.module('root', ['ngMaterial', 'ngMessages', 'ngSanitize'])
+var rootModule = angular.module('root', ['ngMaterial', 'ngMessages', 'ngSanitize', 'md.data.table'])
 
 function ProductInfoController($scope, product, currencies, addToCart) {
     $scope.product = product
@@ -12,8 +12,18 @@ function ProductInfoController($scope, product, currencies, addToCart) {
     $scope.addToCart = addToCart
 }
 
+function CartController($scope, cart, currencies) {
+    $scope.cart = cart
+    $scope.currencies = currencies
+    $scope.selectedCurrency = currencies[0]
+
+    $scope.selectCurrency = function(currency) {
+        $scope.selectedCurrency = currency
+    }
+}
+
 function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToast) {
-    $scope.itemsInCart = 0 // Shown as a badge on the shopping cart icon (top right)
+    $scope.cart = []
 
     $http.get($location.$$absUrl + "api/products").then((response) => {
         $scope.products = response.data
@@ -54,7 +64,22 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
                 product: product,
                 currencies: $scope.currencies,
                 addToCart: $scope.addToCart
-            }, controller: ProductInfoController
+            }, 
+            controller: ProductInfoController
+        })
+    }
+
+    $scope.showCart = function($event) {
+        $mdDialog.show({
+            parent: angular.element(document.body),
+            targetEvent: $event,
+            templateUrl: '/cart.html',
+            clickOutsideToClose: true,
+            locals: {
+                cart: $scope.cart,
+                currencies: $scope.currencies
+            },
+            controller: CartController
         })
     }
 
@@ -63,9 +88,11 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
     }
 
     // Add to cart and snackbar logic
-    $scope.addToCart = function(productName, amount) {
-        amount = amount || 1
-        $mdToast.show($mdToast.simple().textContent(`Added ${amount} × ${productName} to cart!`)) // unicode times character
+    $scope.addToCart = function(product, quantity) {
+        quantity = quantity || 1
+        $mdToast.show($mdToast.simple().textContent(`Added ${quantity} × ${product.name} to cart!`)) // unicode times character
+        product.quantity = quantity
+        $scope.cart.push(product)
     }
 }
 
