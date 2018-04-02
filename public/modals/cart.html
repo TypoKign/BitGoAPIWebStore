@@ -1,10 +1,10 @@
 <!-- Fetched when the user clicks the shopping cart icon -->
 
 <md-dialog flex="40">
-    <md-dialog-content>
-        <div layout="column" layout-margin>
-            <h2 class="md-display-1">Shopping Cart</h2>
-            <table width="100%">
+    <md-dialog-content style="overflow-x:hidden">
+        <div layout="column" layout-padding>
+            <h2 class="md-display-1" align="center">Shopping Cart</h2>
+            <table width="100%" ng-if="cart.length !== 0">
                 <td flex align="center">
                     <md-button class="md-raised" ng-repeat="currency in currencies" ng-click="selectCurrency(currency)">
                         <md-tooltip md-direction="top">1 {{currency.ticker | uppercase}} = {{currency.exchangeRate | currency}}</md-tooltip>
@@ -15,9 +15,10 @@
             <p class="caption" style="margin: auto" ng-if="cart.length === 0">NO ITEMS IN YOUR CART</p>
 
             <md-table-container ng-if="cart.length !== 0">
-                <table md-table>
+                <table md-table multiple>
                     <thead md-head>
                         <tr md-row>
+                            <th md-column class="delete-column"></th>
                             <th md-column><span>Product</span></th>
                             <th md-column md-numeric><span>Quantity</span></th>
                             <th md-column md-numeric><span>Price</span></th>
@@ -25,15 +26,21 @@
                     </thead>
                     <tbody md-body>
                         <tr md-row ng-repeat="product in cart">
+                            <td md-cell>
+                                <md-button class="md-icon-button" ng-click="removeFromCart($index)">
+                                    <md-icon>close</md-icon>
+                                </md-button>
+                            </td>
                             <td md-cell>{{product.name}}</td>
-                            <td md-cell>{{product.quantity}}</td>
-                            <td md-cell>{{product.price * product.quantity / selectedCurrency.exchangeRate | number : 6}} {{selectedCurrency.ticker | uppercase}}</td>
+                            <td md-cell md-numeric ng-click="editQuantity($event, product)">{{product.quantity}}</td>
+                            <td md-cell md-numeric>{{product.price * product.quantity / selectedCurrency.exchangeRate | number : 6}} {{selectedCurrency.ticker | uppercase}}</td>
                         </tr>
                     </tbody>
                 </table>
             </md-table-container>
 
-            <div layout="row" layout-align="end">
+            <div layout="row" layout-align="end center" layout-margin flex>
+                <span ng-if="cart.length !== 0" class="md-title"><strong>Total: </strong> {{cartTotal / selectedCurrency.exchangeRate | number : 6}} {{selectedCurrency.ticker | uppercase}}</span>
                 <md-button class="md-fab" ng-disabled="cart.length === 0" ng-href="checkout.html">
                     <md-tooltip md-direction="top">Proceed to Checkout</md-tooltip>
                     <md-icon>arrow_forward</md-icon>

@@ -12,17 +12,46 @@ function ProductInfoController($scope, product, currencies, addToCart) {
     $scope.addToCart = addToCart
 }
 
-function CartController($scope, cart, currencies) {
+function CartController($scope, $mdEditDialog, cart, currencies) {
     $scope.cart = cart
     $scope.currencies = currencies
     $scope.selectedCurrency = currencies[0]
+    $scope.cartTotal = 0
+
+    $scope.$watch('cart', (newProducts) => {
+        $scope.cartTotal = 0
+
+        for (let i = 0; i < cart.length; i++) {
+            $scope.cartTotal += newProducts[i].price * newProducts[i].quantity
+        }
+    }, true)
 
     $scope.selectCurrency = function(currency) {
         $scope.selectedCurrency = currency
     }
+
+    $scope.removeFromCart = function(index) {
+        $scope.cart.splice(index,1)
+    }
+
+    $scope.editQuantity = function($event, product) {
+        $mdEditDialog.large({
+            title: "Set Quantity",
+            modelValue: product.quantity,
+            placeholder: product.quantity,
+            save: function(input) {
+                product.quantity = input.$modelValue
+            },
+            targetEvent: $event,
+            validators: {
+                min: 1,
+                'ng-pattern': "/^[1-9][0-9]*$/"
+            }
+        })
+    }
 }
 
-function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToast) {
+function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToast, $mdEditDialog) {
     $scope.cart = []
 
     $http.get($location.$$absUrl + "api/products").then((response) => {
@@ -76,6 +105,7 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
             templateUrl: '/modals/cart.html',
             clickOutsideToClose: true,
             locals: {
+                $mdEditDialog: $mdEditDialog,
                 cart: $scope.cart,
                 currencies: $scope.currencies
             },
@@ -89,10 +119,22 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
 
     // Add to cart and snackbar logic
     $scope.addToCart = function(product, quantity) {
-        quantity = quantity || 1
+        var newId = product._id // _id field from MongoDB, guaranteed to be unique for each product, making the find function easy
+        quantity = quantity || 1 // Quantity may be null if this function is called from the main page
+
         $mdToast.show($mdToast.simple().textContent(`Added ${quantity} × ${product.name} to cart!`)) // unicode times character
-        product.quantity = quantity
-        $scope.cart.push(product)
+
+        // See if we already have some of the product in the cart
+        var existingProduct = $scope.cart.find( element => element._id === newId )
+
+        // If we don't already have some of the product in our cart, push the product to the cart
+        // Else, increment the quantity of the existing product record
+        if (existingProduct === undefined) {
+            product.quantity = quantity
+            $scope.cart.push(product)
+        } else {
+            existingProduct.quantity += quantity
+        }
     }
 }
 

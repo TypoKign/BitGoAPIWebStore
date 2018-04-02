@@ -18,3 +18,10 @@
     color: gray;
     letter-spacing: 1px;
 }
+
+.delete-column {
+    padding: 0px;
+    max-width: 12px;
+    min-width: 12px;
+    width: 12px;
+}
