@@ -19,7 +19,7 @@ function CheckoutController($scope, $http, $cookies, $location) {
         $scope.cartTotal = 0
 
         for (let i = 0; i < $scope.cart.length; i++) {
-            $scope.cartTotal += $scope.cart[i].price
+            $scope.cartTotal += $scope.cart[i].price * $scope.cart[i].quantity
         }
     })
 
@@ -40,8 +40,9 @@ function CheckoutController($scope, $http, $cookies, $location) {
             currency: $cookies.get('currency'),
             checkoutInfo: $scope.checkoutInfo
         }
-        $http.post("http://" + $location.host() + "/api/checkout", data).then((response) => {
-            callback(response.address, response.qrCode)
+        $http.post("http://" + $location.host() + "/api/checkout", data)
+        .then((response) => {
+            callback(response.data.address, response.data.qrCode)
         })
     }
 
@@ -54,6 +55,10 @@ function CheckoutController($scope, $http, $cookies, $location) {
             $scope.receiveAddress = address
             $scope.qrCode = qrCode
         })
+    }
+
+    $scope.copyAddress = function() {
+        
     }
 }
 

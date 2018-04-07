@@ -21,11 +21,11 @@ const currencies = [
         ticker: "btc",
         icon: "/svg/btc.svg"
     },
-    {
-        name: "ether",
-        ticker: "eth",
-        icon: "/svg/eth.svg"
-    },
+    // {
+    //     name: "ether",
+    //     ticker: "eth",
+    //     icon: "/svg/eth.svg"
+    // },
     {
         name: "ripple",
         ticker: "xrp",
@@ -56,6 +56,21 @@ if (bitgoEnv === 'test') {
         // append a 't' to the beginning of each ticker
         currencies[i].ticker = 't' + currencies[i].ticker; 
     }
+}
+
+const walletIds = {}
+
+for (let i = 0; i < currencies.length; i++) {
+    let ticker = currencies[i].ticker
+    bitgo.coin(ticker).wallets().list({}).then( (wallets) => {
+        let wallet = wallets.wallets.find( wallet => wallet._wallet.label == "web_store_receive_wallet")
+        if (wallet) {
+            console.log(`Found ${ticker.toUpperCase()} wallet: ${wallet._wallet.id}`)
+            walletIds[ticker] = wallet._wallet.id
+        } else {
+            console.log(`Unable to find ${ticker.toUpperCase()} wallet.`)
+        }
+    })
 }
 
 // Log all API requests
@@ -108,7 +123,15 @@ router.post('/checkout', (req, res) => {
                       req.body.currency
     )
 
-    
+    bitgo.coin(req.body.currency).wallets().get({ id: walletIds[req.body.currency] }).then( (wallet) => {
+        wallet.createAddress({ label: `Receive address for ${req.body.checkoutInfo.name}`}).then((addr) => {
+            console.log(`Generated ${req.body.currency.toUpperCase()} receive address ${addr.address}`)
+            res.json({
+                address: addr.address,
+                qrCode: `https://chart.googleapis.com/chart?cht=qr&chs=384x384&chl=${addr.address}&chld=m`
+            })
+        })
+    })
 })
 
 // Pass the router to our main router

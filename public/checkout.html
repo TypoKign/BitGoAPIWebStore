@@ -85,11 +85,11 @@
             </div>
             
             <md-card flex>
-                <md-card-content layout="column" layout-align="center center">
-                    <div ng-hide="receiveAddress == null">
+                <md-card-content>
+                    <div ng-hide="receiveAddress == null" layout="column" layout-align="center center">
                         <h3 class="md-headline" style="text-align: center">Send {{cartTotal | number : 6}} {{selectedCurrency.ticker | uppercase}} to</h3>
-                        <h2 class="md-display-1" style="text-align: center" ng-bind="receiveAddress"></h2>
-                        <img src="{{qrCode}}">
+                        <img src="{{qrCode}}" style="text-align: center">
+                        <p class="md-whiteframe-2dp address" ng-bind="receiveAddress"></p>
                     </div>
                 </md-card-content>
             </md-card>

@@ -1,0 +1,8 @@
+.address {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    padding: 8px;
+    border: #eee;
+    background-color: #eee;
+    border-radius: 4px;
+}
