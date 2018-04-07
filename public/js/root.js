@@ -4,7 +4,7 @@
  * Served to the client along with index.html. Provides Angular controllers for the home page and product info cards
  */
 
-var rootModule = angular.module('root', ['ngMaterial', 'ngMessages', 'ngSanitize', 'md.data.table'])
+var rootModule = angular.module('root', ['ngCookies', 'ngMaterial', 'ngMessages', 'ngSanitize', 'md.data.table'])
 
 function ProductInfoController($scope, product, currencies, addToCart) {
     $scope.product = product
@@ -12,7 +12,7 @@ function ProductInfoController($scope, product, currencies, addToCart) {
     $scope.addToCart = addToCart
 }
 
-function CartController($scope, $mdEditDialog, cart, currencies) {
+function CartController($scope, $mdEditDialog, $cookies, $window, cart, currencies) {
     $scope.cart = cart
     $scope.currencies = currencies
     $scope.selectedCurrency = currencies[0]
@@ -49,9 +49,22 @@ function CartController($scope, $mdEditDialog, cart, currencies) {
             }
         })
     }
+
+    $scope.checkout = function() {
+        var shrunkCart = $scope.cart.map(product => ({
+            _id: product._id,
+            quantity: product.quantity
+        }))
+
+        $cookies.putObject("cart", shrunkCart)
+        $cookies.put("currency", $scope.selectedCurrency.ticker)
+
+        $window.location.href = "http://" + $window.location.host + "/checkout"
+    }
 }
 
-function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToast, $mdEditDialog) {
+function IndexController($scope, $http, $window, $location, $cookies, $mdSidenav, $mdDialog, $mdToast, $mdEditDialog) {
+    $http.defaults.headers.post['Content-Type'] = 'application/json';
     $scope.cart = []
 
     $http.get($location.$$absUrl + "api/products").then((response) => {
@@ -106,6 +119,8 @@ function IndexController($scope, $http, $location, $mdSidenav, $mdDialog, $mdToa
             clickOutsideToClose: true,
             locals: {
                 $mdEditDialog: $mdEditDialog,
+                $cookies: $cookies,
+                $window: $window,
                 cart: $scope.cart,
                 currencies: $scope.currencies
             },

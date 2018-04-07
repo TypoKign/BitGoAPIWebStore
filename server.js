@@ -10,12 +10,18 @@ const express = require("express");
 const path = require("path")
 const api = require("./api.js")
 
+var bodyParser = require("body-parser")
+
 // Initialize Express HTTP server
 const port = 80;
 const app = express();
 
+// Sanitize POST requests in json and x-www-form-urlencoded
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
 // Serve static files in the /public/ directory
-app.use(express.static('public'))
+app.use(express.static('public', {extensions: ['html']}))
 
 // Pass control of all /api requests to api.js
 app.use('/api', api.router)

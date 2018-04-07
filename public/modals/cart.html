@@ -41,7 +41,7 @@
 
             <div layout="row" layout-align="end center" layout-margin flex>
                 <span ng-if="cart.length !== 0" class="md-title"><strong>Total: </strong> {{cartTotal / selectedCurrency.exchangeRate | number : 6}} {{selectedCurrency.ticker | uppercase}}</span>
-                <md-button class="md-fab" ng-disabled="cart.length === 0" ng-href="checkout.html">
+                <md-button class="md-fab" ng-disabled="cart.length === 0" ng-click="checkout()">
                     <md-tooltip md-direction="top">Proceed to Checkout</md-tooltip>
                     <md-icon>arrow_forward</md-icon>
                 </md-button>

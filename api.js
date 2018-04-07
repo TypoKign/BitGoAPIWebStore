@@ -10,7 +10,7 @@ const express = require("express")
 const bitgoModule = require("bitgo")
 const Promise = require("bluebird")
 
-const productsDriver = require("./products.js")
+const dbDriver = require("./db.js")
 
 const router = express.Router()
 
@@ -74,6 +74,7 @@ router.get('/currencies', (req, res) => {
         return bitgo.coin(currency.ticker).markets().latest({}, (err, marketData) => {
             if (err) {
                 res.json({message: "Error occurred fetching market data", error: err})
+                return
             }
 
             currency.exchangeRate = marketData.latest.currencies.USD.last
@@ -85,7 +86,29 @@ router.get('/currencies', (req, res) => {
 
 // Allow users to request a list of products from MongoDB
 router.get('/products', (req, res) => {
-    res.json(productsDriver.products)
+    res.json(dbDriver.products)
+})
+
+router.post('/checkout', (req, res) => {
+    // Convert the product information into a reference to a product in MongoDB. Only the ID and the quantity are needed
+    var cart = req.body.cart.map(element => ({
+        product: element._id,
+        quantity: element.quantity
+    }))
+
+    // Accumulate the prices of the objects in the cart. Does NOT trust the client's values, re-calculates from the database driver
+    var totalPriceUsd = req.body.cart.reduce( (price, product) => {
+        return price + product.quantity * dbDriver.getProductPrice(product._id) 
+    }, 0)
+
+    dbDriver.addOrder(req.body.checkoutInfo.name,
+                      req.body.checkoutInfo.email,
+                      cart,
+                      totalPriceUsd,
+                      req.body.currency
+    )
+
+    
 })
 
 // Pass the router to our main router
