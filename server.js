@@ -21,10 +21,16 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // Serve static files in the /public/ directory
-app.use(express.static('public', {extensions: ['html']}))
+app.use('/res', express.static(__dirname + '/res'))
+app.use('/webstore', express.static(__dirname + '/webstore'))
+app.use('/dependencies', express.static(__dirname + '/dependencies'))
 
 // Pass control of all /api requests to api.js
 app.use('/api', api.router)
+
+app.all('/*', function (req, res, next) {
+    res.sendFile('index.html', {root: __dirname + "/webstore"})
+})
 
 // Start Express server
 app.listen(port, (err) => {

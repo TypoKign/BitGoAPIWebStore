@@ -1,4 +1,4 @@
-.product-card {
+store-product-card {
     width: 550px;
     margin: 10px auto;
     cursor: pointer;
@@ -24,4 +24,13 @@
     max-width: 12px;
     min-width: 12px;
     width: 12px;
+}
+
+.receive-address {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    padding: 8px;
+    border: #eee;
+    background-color: #eee;
+    border-radius: 4px;
 }

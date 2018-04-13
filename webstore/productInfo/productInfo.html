@@ -3,33 +3,33 @@
 <md-dialog flex="50">
     <md-dialog-content>
         <div layout="column">
-            <img src="{{product.image}}" alt="{{product.name}}" class="product-info-image">
+            <img src="{{vm.product.image}}" alt="{{vm.product.name}}" class="product-info-image">
             <div layout="column" layout-margin>
-                <h2 flex="" md-truncate="">{{product.name}}</h2>
-                <p ng-bind-html="product.description"></p>
+                <h2 flex="" md-truncate="">{{vm.product.name}}</h2>
+                <p ng-bind-html="vm.product.description"></p>
                 <md-divider></md-divider>
                 <table width="100%">
                     <td flex align="center">
-                        <b>{{product.price * (quantity || 1) | currency}} USD</b>
+                        <b>{{vm.product.price * (vm.quantity || 1) | currency}} USD</b>
                     </td>
-                    <td flex ng-repeat="currency in currencies" align="center">
-                        <b style="vertical-align:middle">{{product.price * (quantity || 1) / currency.exchangeRate | number : 6}}</b>
+                    <td flex ng-repeat="currency in vm.currencies" align="center">
+                        <b style="vertical-align:middle">{{vm.product.price * (vm.quantity || 1) / currency.exchangeRate | number : 6}}</b>
                         <img src="{{currency.icon}}" alt="{{currency.ticker | uppercase}}" height="20px" style="vertical-align:middle">
                     </td>
                 </table>
                 <md-divider></md-divider>
                 <div layout="row" flex layout-align="end">
-                        <md-input-container flex="25" flex-offset="50">
-                            <form name="quantityForm">
+                    <md-input-container flex="25" flex-offset="50">
+                        <form name="quantityForm">
                             <label>Quantity</label>
-                            <input name="quantity" type="number" ng-model="quantity" value="1" min=1 ng-pattern="/^[0-9]+$/">
+                            <input name="quantity" type="number" ng-model="vm.quantity" value="1" min=1 ng-pattern="/^[0-9]+$/">
                             <div ng-messages="quantityForm.quantity.$error">
                                 <div ng-message="pattern">Invalid quantity. Please enter a positive whole number.</div>
                             </div>
-                            </form>
-                        </md-input-container>
+                        </form>
+                    </md-input-container>
                     <div>
-                        <md-button class="md-fab md-accent" ng-disabled="quantityForm.$invalid" ng-click="addToCart(product, quantity)"><md-icon>add_shopping_cart</md-icon></md-button>
+                        <md-button class="md-fab md-accent" ng-disabled="quantityForm.$invalid" ng-click="vm.addToCart(vm.product, vm.quantity)"><md-icon>add_shopping_cart</md-icon></md-button>
                     </div>
                 </div>
             </div>

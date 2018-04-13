@@ -1,0 +1,43 @@
+<div layout="row">
+    <!-- Left navigation bar -->
+    <md-sidenav md-component-id="sidebar" class="md-sidenav-left">
+        <md-toolbar md-whiteframe="4">
+            <div class="md-toolbar-tools">
+                <h2 flex="" md-trucate="">Web Store</h2>
+            </div>
+        </md-toolbar>
+        
+        <h4 style="margin: 16px 16px 8px 16px">Product Categories</h4>
+        <md-list>
+            <md-list-item ng-click="vm.setSelectedCategory('all')">
+                All Products
+            </md-list-item>
+            <md-list-item ng-repeat="category in vm.productCategories" ng-click="vm.setSelectedCategory(category)">
+                {{category}}
+            </md-list-item>
+        </md-list>
+    </md-sidenav>
+    
+    <div layout="column" flex>
+        <!-- Top header -->
+        <md-toolbar md-whiteframe="4">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" aria-label="Settings" ng-click="vm.openSidebar()">
+                    <md-icon>menu</md-icon>
+                </md-button>
+                
+                <h2 flex="" md-truncate="">Web Store</h2>
+                <md-button ng-click="vm.showAboutDialog($event)">About</md-button>
+                <md-button ng-click="vm.showCart($event)" class="md-icon-button" aria-label="More">
+                    <md-icon>shopping_cart</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        
+        <!-- Main page content -->
+        <div layout="row" flex layout-wrap layout-align="center">
+            <!-- Product cards -->
+            <store-product-card ng-repeat="product in vm.products" product="product" currencies="vm.currencies" ng-if="vm.shouldShowCard(product)"></store-product-card>
+        </div>
+    </div>
+</div>

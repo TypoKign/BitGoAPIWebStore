@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="store">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Web Store</title>
+
+    <link rel="stylesheet" href="/res/styles.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css"> <!-- Angular Material CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Material Icons -->
+    <link rel="stylesheet" href="/dependencies/data-tables/md-data-table.min.css"> <!-- Data tables-->
+</head>
+<body>
+    <div ng-view></div>
+    
+    <!--AngularJS 1.6.9-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-cookies.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
+
+    <!--Angular Material library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.min.js"></script> <!-- Material dependency for animations -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-aria.min.js"></script> <!-- Material dependency for assistive tech -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-messages.min.js"></script>  <!-- Material dependency -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script> <!-- Angular Material -->
+    <script src="/dependencies/data-tables/md-data-table.min.js"></script> <!-- Data tables -->
+
+    <!-- Bootstrapping -->
+    <script src="/webstore/store.module.js"></script>
+
+    <!-- Core module -->
+    <script src="/webstore/core/core.module.js"></script>
+    <script src="/webstore/core/config.js"></script>
+    <script src="/webstore/core/config.route.js"></script>
+    <script src="/webstore/core/dataservice.js"></script>
+    <script src="/webstore/core/cart.js"></script>
+
+    <!-- Utilities -->
+    <script src="/webstore/util/util.module.js"></script>
+    <script src="/webstore/util/limitToWord.filter.js"></script>
+
+    <!-- Index (products view) -->
+    <script src="/webstore/index/index.module.js"></script>
+    <script src="/webstore/index/index.js"></script>
+
+    <!-- Checkout -->
+    <script src="/webstore/checkout/checkout.module.js"></script>
+    <script src="/webstore/checkout/checkout.js"></script>
+
+    <!-- Simple layouts -->
+    <script src="/webstore/layout/layout.module.js"></script>
+    <script src="/webstore/layout/layout.js"></script>
+
+    <!-- Product cards -->
+    <script src="/webstore/productCards/productCards.module.js"></script>
+    <script src="/webstore/productCards/storeProductCard.js"></script>
+
+    <!-- Product info popup -->
+    <script src="/webstore/productInfo/productInfo.module.js"></script>
+    <script src="/webstore/productInfo/productInfo.js"></script>
+
+    <!-- Cart popup -->
+    <script src="/webstore/cartDialog/cartDialog.module.js"></script>
+    <script src="/webstore/cartDialog/cartDialog.js"></script>
+</body>
+</html>

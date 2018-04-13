@@ -19,7 +19,7 @@ const currencies = [
     {
         name: "bitcoin",
         ticker: "btc",
-        icon: "/svg/btc.svg"
+        icon: "/res/svg/btc.svg"
     },
     // {
     //     name: "ether",
@@ -29,17 +29,17 @@ const currencies = [
     {
         name: "ripple",
         ticker: "xrp",
-        icon: "/svg/xrp.svg"
+        icon: "/res/svg/xrp.svg"
     },
     {
         name: "bitcoincash",
         ticker: "bch",
-        icon: "/svg/bch.svg"
+        icon: "/res/svg/bch.svg"
     },
     {
         name: "litecoin",
         ticker: "ltc",
-        icon: "/svg/ltc.svg"
+        icon: "/res/svg/ltc.svg"
     }
 ]
 
@@ -104,29 +104,28 @@ router.get('/products', (req, res) => {
     res.json(dbDriver.products)
 })
 
-router.post('/checkout', (req, res) => {
-    // Convert the product information into a reference to a product in MongoDB. Only the ID and the quantity are needed
-    var cart = req.body.cart.map(element => ({
-        product: element._id,
-        quantity: element.quantity
-    }))
+router.get('/categories', (req, res) => {
+    res.json(["Category 1", "Category 2", "Category 3", "Category 4"])
+})
 
+router.post('/checkout', (req, res) => {
     // Accumulate the prices of the objects in the cart. Does NOT trust the client's values, re-calculates from the database driver
     var totalPriceUsd = req.body.cart.reduce( (price, product) => {
         return price + product.quantity * dbDriver.getProductPrice(product._id) 
     }, 0)
 
-    dbDriver.addOrder(req.body.checkoutInfo.name,
-                      req.body.checkoutInfo.email,
-                      cart,
+    dbDriver.addOrder(req.body.buyerName,
+                      req.body.buyerEmail,
+                      req.body.cart,
                       totalPriceUsd,
-                      req.body.currency
+                      req.body.currencyTicker
     )
 
-    bitgo.coin(req.body.currency).wallets().get({ id: walletIds[req.body.currency] }).then( (wallet) => {
-        wallet.createAddress({ label: `Receive address for ${req.body.checkoutInfo.name}`}).then((addr) => {
-            console.log(`Generated ${req.body.currency.toUpperCase()} receive address ${addr.address}`)
+    bitgo.coin(req.body.currencyTicker).wallets().get({ id: walletIds[req.body.currencyTicker] }).then( (wallet) => {
+        wallet.createAddress({ label: `Receive address for ${req.body.buyerName}`}).then((addr) => {
+            console.log(`Generated ${req.body.currencyTicker.toUpperCase()} receive address ${addr.address}`)
             res.json({
+                price: totalPriceUsd,
                 address: addr.address,
                 qrCode: `https://chart.googleapis.com/chart?cht=qr&chs=384x384&chl=${addr.address}&chld=m`
             })
