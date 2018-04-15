@@ -143,44 +143,4 @@
             products = products
         })
     }
-    
-    // /**
-    // * Returns the price of a product in USD from the cached products list
-    // * @param {String} productId 
-    // */
-    // exports.getProductPrice = function(productId) {
-    //     var product = exports.products.find( (product) => {
-    //         return product._id == productId
-    //     })
-        
-    //     if (product) {
-    //         return product.price
-    //     }
-        
-    //     return 0
-    // }
-    
-    // /**
-    // * Adds an order to the orders collection
-    // * @param {String} buyerName Name provided by the user via the checkout form
-    // * @param {String} buyerEmail Email address provided by the user via the checkout form
-    // * @param {[{product: String, quantity: Number}]} cart Array of product references in the user's cart. 
-    // * @param {Number} totalPriceUsd Total price (USD) of the user's cart
-    // * @param {String} currencyTicker Ticker of the currency selected by the user
-    // */
-    // exports.addOrder = function(buyerName, buyerEmail, cart, totalPriceUsd, currencyTicker) {
-    //     var order = new Order({
-    //         name: buyerName,
-    //         email: buyerEmail,
-    //         date: Date.now(),
-    //         cart: cart,
-    //         totalPriceUsd: totalPriceUsd,
-    //         currency: currencyTicker,
-    //         paid: false
-    //     })
-        
-    //     order.save((err) => {
-    //         if (err) console.error("Unable to add order to database\n" + err)
-    //     })
-    // }
 })()

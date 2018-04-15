@@ -57,10 +57,17 @@
         setInterval(refreshMarketData, 60 * 1000)
     }
 
+    /**
+     * Gets the list of supported currencies, including exchange rates
+     */
     function getCoins() {
         return coins
     }
 
+    /**
+     * Generates and returns a BIP38 deterministic address for the web store receive wallet. Addresses should be unique to each order
+     * @param {String} coin Ticker of the coin to generate an address for
+     */
     function generateReceiveAddress(coin) {
         return bitgo.coin(coin).wallets().get({ id: wallets[coin] }).then( function (wallet) {
             return wallet.createAddress({ label: 'BitGo web store receive address'}).then(function (response) {
