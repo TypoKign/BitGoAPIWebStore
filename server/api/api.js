@@ -45,20 +45,21 @@
     router.post('/checkout', function (req, res) {
         // Accumulate the prices of the objects in the cart. Does NOT trust the client's values, re-calculates from the database driver
         dbDriver.priceMany(req.body.cart).then(function (totalPriceUsd) {
-            dbDriver.addOrder(req.body.buyerName,
-                req.body.buyerEmail,
-                req.body.cart,
-                totalPriceUsd,
-                req.body.currencyTicker
-            )
-            
             bgDriver.generateReceiveAddress(req.body.currencyTicker).then(function (addr) {
+                dbDriver.addOrder(req.body.buyerName,
+                                  req.body.buyerEmail,
+                                  req.body.cart,
+                                  totalPriceUsd,
+                                  req.body.currencyTicker,
+                                  addr,
+                                  false
+                )
                 res.json({
                     price: totalPriceUsd,
                     address: addr,
                     qrCode: `https://chart.googleapis.com/chart?cht=qr&chs=384x384&chl=${addr}&chld=m`
                 })
-            })
+            })            
         })
     })
     

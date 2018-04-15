@@ -18,7 +18,8 @@
         getProducts: getProducts,
         addOrder: addOrder,
         priceOne: priceOne,
-        priceMany: priceMany
+        priceMany: priceMany,
+        getUnpaidOrders: getUnpaidOrders
     }
     
     var mongoose = require('mongoose')
@@ -47,6 +48,7 @@
         cart: [productReferenceSchema],
         totalPriceUsd: Number,
         coin: String,
+        address: String,
         paid: Boolean
     })
     var Order = mongoose.model('Order', orderSchema)
@@ -93,7 +95,7 @@
      * @param {Number} totalPriceUsd Price of the order
      * @param {String} coinTicker Ticker of the cryptocurrency for this order
      */
-    function addOrder(buyerName, buyerEmail, cart,  totalPriceUsd, coinTicker) {
+    function addOrder(buyerName, buyerEmail, cart,  totalPriceUsd, coinTicker, address) {
         var order = new Order({
             name: buyerName,
             email: buyerEmail,
@@ -101,6 +103,7 @@
             cart: cart,
             totalPriceUsd: totalPriceUsd,
             coin: coinTicker,
+            address: address,
             paid: false
         })
 
@@ -130,6 +133,17 @@
             })
         }, 0).then(function (total) {
             return total
+        })
+    }
+
+    /**
+     * Queries the database for all orders within the past month that are unpaid
+     */
+    function getUnpaidOrders() {
+        var oneMonthAgo = new Date()
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
+        return Order.find({ paid: false, date: { $gte: oneMonthAgo } }).exec().then(function (orders) {
+            return orders
         })
     }
 
