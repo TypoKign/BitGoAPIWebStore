@@ -1,0 +1,27 @@
+[
+    {
+        "name": "bitcoin",
+        "ticker": "btc",
+        "icon": "/res/svg/btc.svg"
+    },
+    {
+        "name": "ether",
+        "ticker":"eth",
+        "icon": "/res/svg/eth.svg"
+    },
+    {
+        "name": "ripple",
+        "ticker": "xrp",
+        "icon": "/res/svg/xrp.svg"
+    },
+    {
+        "name": "bitcoincash",
+        "ticker": "bch",
+        "icon": "/res/svg/bch.svg"
+    },
+    {
+        "name": "litecoin",
+        "ticker": "ltc",
+        "icon": "/res/svg/ltc.svg"
+    }
+]
