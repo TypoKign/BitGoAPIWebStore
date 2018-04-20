@@ -2,26 +2,31 @@
     {
         "name": "bitcoin",
         "ticker": "btc",
-        "icon": "/res/svg/btc.svg"
+        "icon": "/res/svg/btc.svg",
+        "decimals": 8
     },
     {
         "name": "ether",
         "ticker":"eth",
-        "icon": "/res/svg/eth.svg"
+        "icon": "/res/svg/eth.svg",
+        "decimals": 18
     },
     {
         "name": "ripple",
         "ticker": "xrp",
-        "icon": "/res/svg/xrp.svg"
+        "icon": "/res/svg/xrp.svg",
+        "decimals": 6
     },
     {
         "name": "bitcoincash",
         "ticker": "bch",
-        "icon": "/res/svg/bch.svg"
+        "icon": "/res/svg/bch.svg",
+        "decimals": 8
     },
     {
         "name": "litecoin",
         "ticker": "ltc",
-        "icon": "/res/svg/ltc.svg"
+        "icon": "/res/svg/ltc.svg",
+        "decimals": 8
     }
 ]

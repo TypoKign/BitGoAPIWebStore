@@ -45,12 +45,16 @@
     router.post('/checkout', function (req, res) {
         // Accumulate the prices of the objects in the cart. Does NOT trust the client's values, re-calculates from the database driver
         dbDriver.priceMany(req.body.cart).then(function (totalPriceUsd) {
+            var coin = req.body.currencyTicker
+
+            var price = totalPriceUsd / bgDriver.getCoins().find( coinObj => coinObj.ticker === coin).exchangeRate
+
             bgDriver.generateReceiveAddress(req.body.currencyTicker).then(function (addr) {
                 dbDriver.addOrder(req.body.buyerName,
                                   req.body.buyerEmail,
                                   req.body.cart,
-                                  totalPriceUsd,
-                                  req.body.currencyTicker,
+                                  price,
+                                  coin,
                                   addr,
                                   false
                 )

@@ -23,8 +23,13 @@
         processDeposit: processDeposit
     }
     
-    var mongoose = require('mongoose')
-    var Promise = require('bluebird')
+    const bgDriver = require('../bitgo/bitgo.js')
+
+    const mongoose =    require('mongoose')
+    const Promise =     require('bluebird')
+    const BigNumber =   require('bignumber.js')
+
+    const TEN = new BigNumber(10) // useful for scientific notation
     
     // Product schema and model definition
     var productSchema = new mongoose.Schema({
@@ -47,7 +52,7 @@
         email: String,
         date: Date,
         cart: [productReferenceSchema],
-        totalPriceUsd: Number,
+        price: String,
         coin: String,
         address: String,
         paid: Boolean
@@ -93,22 +98,24 @@
      * @param {String} buyerName The name of the buyer
      * @param {String} buyerEmail The buyer's email address
      * @param {{product: String, quantity: Number}[]} cart Array of product references with values product (id) and quantity
-     * @param {Number} totalPriceUsd Price of the order
+     * @param {String} price Price of the order in the cryptocurrency associated with the order
      * @param {String} coinTicker Ticker of the cryptocurrency for this order
      */
-    function addOrder(buyerName, buyerEmail, cart,  totalPriceUsd, coinTicker, address) {
+    function addOrder(buyerName, buyerEmail, cart,  price, coinTicker, address) {
         var order = new Order({
             name: buyerName,
             email: buyerEmail,
             date: Date.now(),
             cart: cart,
-            totalPriceUsd: totalPriceUsd,
+            price: price,
             coin: coinTicker,
             address: address,
             paid: false
         })
 
         order.save()
+
+        console.log(`[New Order] From ${buyerName} - ${price.toFixed(6)} ${coinTicker.toUpperCase()}`)
     }
 
     /**
@@ -172,8 +179,15 @@
         .then(function (order) {
             if (order == null) return
 
-            if (valueString >= order.totalPriceUsd) {
-                console.log(`Received ${valueString} ${order.coin.toUpperCase()} deposit! Marking order #${order._id} as paid.`)
+            var value = new BigNumber(valueString) // Value of deposit in base units (Sat/wei/drop/etc)
+            var coinDecimals = bgDriver.getCoins().find(coinObj => coinObj.ticker === order.coin).decimals
+            var orderPrice = new BigNumber(order.price).mul(TEN.pow(coinDecimals)) // Total price of the order in base units
+
+            // if value >= orderPrice OR within 1% difference
+            if (value.gte(orderPrice) || value.sub(orderPrice).div(value).abs().toNumber() < 0.01) {
+                // Deposit amount in standard units (BTC, ETH, etc.)
+                var valuePretty = new BigNumber(value).div(TEN.pow(coinDecimals))
+                console.log(`Received ${valuePretty} ${order.coin.toUpperCase()} deposit! Marking order #${order._id} as paid.`)
                 markAsPaid(order._id)
             }
         })

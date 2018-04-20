@@ -36,13 +36,13 @@
      */
     DepositService.prototype.update = function() {
         // Get transfers of each wallet (one wallet per coin)
-        var transactionQueries = this.wallets.map(wallet => wallet.transactions())
+        var transactionQueries = this.wallets.map(wallet => wallet.transfers())
 
         Promise.all(transactionQueries).then(function (transactions) {
             // Iterate over the array of all transactions for a single coin
             transactions.forEach( coinTransactions => {
                 // Iterate over each transaction for that coin
-                coinTransactions.transactions.forEach( transaction => {
+                coinTransactions.transfers.forEach( transaction => {
                     // Try to handle each transaction
                     processTransaction(transaction)
                 })
@@ -51,14 +51,13 @@
     }
 
     function processTransaction(transaction) {
-        console.dir(transaction)
-        // If the transaction doesn't have enough confirmations, exit
-        if (transaction.confirmations && transaction.confirmations < config.minConfirmations[transaction.coin]) {
+        // If the transaction doesn't have any outputs, we're not interested (probably a Ripple wallet opening)
+        if (!transaction.outputs) {
             return
         }
 
-        // If the transaction doesn't have any outputs, we're not interested (probably a Ripple wallet opening)
-        if (!transaction.outputs) {
+        // If the transaction doesn't have enough confirmations, exit
+        if (!transaction.confirmations || transaction.confirmations < config.minConfirmations[transaction.coin]) {
             return
         }
 
