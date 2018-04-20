@@ -19,7 +19,8 @@
         addOrder: addOrder,
         priceOne: priceOne,
         priceMany: priceMany,
-        getUnpaidOrders: getUnpaidOrders
+        getUnpaidOrders: getUnpaidOrders,
+        processDeposit: processDeposit
     }
     
     var mongoose = require('mongoose')
@@ -156,5 +157,33 @@
 
             products = products
         })
+    }
+
+    /**
+     * Find the order associated with the receive address and mark it as paid if the value received is at least the price of the order
+     * @param {String} address The address that was deposited to
+     * @param {String} valueString The value of the deposit in the currency 
+     */
+    function processDeposit(address, valueString) {
+        Order.findOne({
+            address: address,
+            paid: false
+        }).exec()
+        .then(function (order) {
+            if (order == null) return
+
+            if (valueString >= order.totalPriceUsd) {
+                console.log(`Received ${valueString} ${order.coin.toUpperCase()} deposit! Marking order #${order._id} as paid.`)
+                markAsPaid(order._id)
+            }
+        })
+    }
+
+    function markAsPaid(orderId) {
+        Order.update( {
+            _id: orderId
+        }, {
+            paid: true
+        }).exec()
     }
 })()
