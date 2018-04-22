@@ -14,12 +14,20 @@
 
     var pendingDeposits = []
     
+    /**
+     * Represents a deposit that has been seen on the network but does not have enough confirmations to be considered secure
+     * @param {String} transferId The ID of the transaction from BitGo
+     * @param {String} address The receive address receiving funds from this transaction
+     * @param {String} amount The amount in Satoshi/Wei/Drop/etc
+     * @param {String} coin The ticker of the coin being used
+     */
     function PendingDeposit(transferId, address, amount, coin) {
         this.transferId = transferId
         this.address = address
         this.amount = amount
         this.coin = coin
 
+        // Instruct the database to mark the order as PENDING
         dbDriver.markAsPending(address)
     }
 
@@ -36,6 +44,7 @@
             }
         }
 
+        // walletIds are only string IDs, convert them to wallet objects
         // this.wallets stores wallet objects, which can be used to query balances
         Promise.all(getWalletQueries).then((wallets) => {
             this.wallets = wallets
@@ -43,8 +52,10 @@
     }
 
     DepositService.prototype.update = function() {
+        // Scan the network for new deposits and place them in the pending pool
         findNewDeposits.call(this)
 
+        // Check each pending deposit in the pool for confirmations
         checkPendingDepositConfirmations.call(this)
     }
 
@@ -59,11 +70,13 @@
                     // Discard transfers that don't have outputs
                     if (transfer.outputs == null) return
 
+                    // Filter out outputs that are not tied to an order (e.g. change addresses)
                     Promise.filter(transfer.outputs, function (output) {
                         return dbDriver.isUnpaidReceiveAddress(output.address).then(function (isValid) {
                             return isValid
                         })
                     }).each(function (validOutput) {
+                        // For each output tied to an order, add an entry to the pending deposit pool
                         addPendingDeposit(transfer.id, validOutput.address, validOutput.valueString, transfer.coin)
                     })
                 }
@@ -78,7 +91,9 @@
             var coinDecimals = bgDriver.getCoins().find(coinObj => coinObj.ticker === pendingDeposit.coin).decimals
             var amountPretty = new BigNumber(pendingDeposit.amount).div(TEN.pow(coinDecimals))
 
+            // Query BitGo for information about each transfer in the pool
             wallet.getTransfer( {id: pendingDeposit.transferId} ).then(function (transfer) {
+                // Confirm deposits that have enough confirmations (specified in config.js)
                 if (transfer.confirmations >= config.minConfirmations[pendingDeposit.coin]) {
                     console.log(`Deposit CONFIRMED at ${pendingDeposit.address} - ${amountPretty} ${pendingDeposit.coin.toUpperCase()}`)
                     dbDriver.markAsPaid(pendingDeposit.address)
@@ -104,7 +119,7 @@
             // If we've already accounted for the exact transaction, disregard
             return
         } else if (existingDeposit != null) {
-            // If we've accounted for a transaction by the same buyer, modify the existing transaction
+            // If we've accounted for a transaction for the same order, modify the existing transaction
             console.log(`Received PENDING deposit CORRECTION at ${address} - ${amountPretty} ${coin.toUpperCase()}`)
             existingDeposit.amount += amount
         } else {
