@@ -57,13 +57,25 @@
                                   coin,
                                   addr,
                                   false
-                )
-                res.json({
-                    price: totalPriceUsd,
-                    address: addr,
-                    qrCode: `https://chart.googleapis.com/chart?cht=qr&chs=384x384&chl=${addr}&chld=m`
+                ).then(function (orderId) {
+                    res.json({
+                        id: orderId,
+                        price: totalPriceUsd,
+                        address: addr,
+                        qrCode: `https://chart.googleapis.com/chart?cht=qr&chs=384x384&chl=${addr}&chld=m`
+                    })
                 })
             })            
+        })
+    })
+
+    router.post('/status', function (req, res) {
+        var orderId = req.body.id
+
+        dbDriver.getOrderStatus(orderId).then(function (status) {
+            res.json({
+                status: status
+            })
         })
     })
     

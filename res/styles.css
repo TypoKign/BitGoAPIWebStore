@@ -34,3 +34,7 @@ store-product-card {
     background-color: #eee;
     border-radius: 4px;
 }
+
+.order-id {
+    color: gray;
+}

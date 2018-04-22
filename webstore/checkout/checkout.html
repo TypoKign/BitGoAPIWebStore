@@ -61,10 +61,13 @@
         
         <md-card flex>
             <md-card-content>
-                <div ng-hide="vm.receiveAddress == null" layout="column" layout-align="center center">
+                <div ng-show="vm.showReceiveAddress()" layout="column" layout-align="center center">
                     <h3 class="md-headline" style="text-align: center">Send {{vm.price | number : 6}} {{vm.selectedCurrency.ticker | uppercase}} to</h3>
                     <img src="{{vm.qrCode}}" style="text-align: center">
                     <p class="md-whiteframe-2dp receive-address" ng-bind="vm.receiveAddress"></p>
+                </div>
+                <div ng-hide="vm.orderId == null" layout="row" layout-align="end center">
+                    <p class="order-id"><i>Order #{{vm.orderId}}</i></p>
                 </div>
             </md-card-content>
         </md-card>

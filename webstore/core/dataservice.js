@@ -12,7 +12,8 @@
             getCurrencies: getCurrencies,
             getProducts: getProducts,
             getProductCategories: getProductCategories,
-            postOrderDetails: postOrderDetails
+            postOrderDetails: postOrderDetails,
+            getOrderStatus: getOrderStatus
         }
 
         // Queries the server for a list of supported currencies, tickers, images, and exchange rates
@@ -55,6 +56,20 @@
             }
 
             return $http.post('/api/checkout', orderData)
+                        .then(function (response) {
+                            return response.data
+                        })
+        }
+
+        /**
+         * Retrieves the status of an order (UNPAID, PENDING, PAID)
+         * @param {String} orderId The ID of the order given by the server
+         */
+        function getOrderStatus(orderId) {
+            var data = {
+                id: orderId
+            }
+            return $http.post('/api/status', data)
                         .then(function (response) {
                             return response.data
                         })

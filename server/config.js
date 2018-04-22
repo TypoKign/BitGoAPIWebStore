@@ -12,7 +12,7 @@
 
 
             // TESTNET
-            tbtc: 2,     // block time = 10 minutes
+            tbtc: 1,     // block time = 10 minutes
             teth: 12,    // block time = 18 seconds
             txrp: 0,     // N/A
             tbch: 2,     // block time = 10 minutes

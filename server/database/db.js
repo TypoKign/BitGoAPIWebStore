@@ -17,13 +17,16 @@
     module.exports = {
         getProducts: getProducts,
         addOrder: addOrder,
+        getOrderStatus: getOrderStatus,
         priceOne: priceOne,
         priceMany: priceMany,
-        getUnpaidOrders: getUnpaidOrders,
-        processDeposit: processDeposit
+        isUnpaidReceiveAddress: isUnpaidReceiveAddress,
+        markAsPaid: markAsPaid,
+        markAsPending: markAsPending
     }
     
     const bgDriver = require('../bitgo/bitgo.js')
+    const config = require('../config.js')
 
     const mongoose =    require('mongoose')
     const Promise =     require('bluebird')
@@ -54,8 +57,8 @@
         cart: [productReferenceSchema],
         price: String,
         coin: String,
-        address: String,
-        paid: Boolean
+        status: String,
+        address: String
     })
     var Order = mongoose.model('Order', orderSchema)
 
@@ -109,13 +112,22 @@
             cart: cart,
             price: price,
             coin: coinTicker,
-            address: address,
-            paid: false
+            status: "UNPAID",
+            address: address
         })
 
-        order.save()
+        return order.save().then(function (savedOrder) {
+            return savedOrder._id
+        })
 
         console.log(`[New Order] From ${buyerName} - ${price.toFixed(6)} ${coinTicker.toUpperCase()}`)
+    }
+
+    function getOrderStatus(orderId) {
+        return Order.findById(orderId, 'status').exec().then(function (order) {
+            if (order != null)
+                return order.status
+        })
     }
 
     /**
@@ -144,17 +156,6 @@
         })
     }
 
-    /**
-     * Queries the database for all orders within the past month that are unpaid
-     */
-    function getUnpaidOrders() {
-        var oneMonthAgo = new Date()
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
-        return Order.find({ paid: false, date: { $gte: oneMonthAgo } }).exec().then(function (orders) {
-            return orders
-        })
-    }
-
     function refreshProducts() {
         Product.find( function (err, products) {
             if (err) {
@@ -165,39 +166,29 @@
             products = products
         })
     }
-
-    /**
-     * Find the order associated with the receive address and mark it as paid if the value received is at least the price of the order
-     * @param {String} address The address that was deposited to
-     * @param {String} valueString The value of the deposit in the currency 
-     */
-    function processDeposit(address, valueString) {
-        Order.findOne({
-            address: address,
-            paid: false
-        }).exec()
+    function isUnpaidReceiveAddress(address) {
+        return Order
+            .find({address: address})
+            .where('status').in(["UNPAID", "PENDING", null])
+            .exec()
         .then(function (order) {
-            if (order == null) return
-
-            var value = new BigNumber(valueString) // Value of deposit in base units (Sat/wei/drop/etc)
-            var coinDecimals = bgDriver.getCoins().find(coinObj => coinObj.ticker === order.coin).decimals
-            var orderPrice = new BigNumber(order.price).mul(TEN.pow(coinDecimals)) // Total price of the order in base units
-
-            // if value >= orderPrice OR within 1% difference
-            if (value.gte(orderPrice) || value.sub(orderPrice).div(value).abs().toNumber() < 0.01) {
-                // Deposit amount in standard units (BTC, ETH, etc.)
-                var valuePretty = new BigNumber(value).div(TEN.pow(coinDecimals))
-                console.log(`Received ${valuePretty} ${order.coin.toUpperCase()} deposit! Marking order #${order._id} as paid.`)
-                markAsPaid(order._id)
-            }
+            return order.length > 0
         })
     }
 
-    function markAsPaid(orderId) {
+    function markAsPaid(address) {
         Order.update( {
-            _id: orderId
+            address: address
         }, {
-            paid: true
+            status: "PAID"
+        }).exec()
+    }
+
+    function markAsPending(address) {
+        Order.update( {
+            address: address
+        }, {
+            status: "PENDING"
         }).exec()
     }
 })()

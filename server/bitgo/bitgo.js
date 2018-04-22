@@ -6,7 +6,7 @@
         generateReceiveAddress: generateReceiveAddress
     }
     
-    const DepositService = require('./depositservice.js')
+    const DepositService = require('./deposits.js')
     
     const bitgojs = require('bitgo')
     const fs = require('fs')
