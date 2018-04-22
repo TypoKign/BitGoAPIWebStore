@@ -61,13 +61,22 @@
         
         <md-card flex>
             <md-card-content>
+                <div ng-hide="vm.orderId == null" layout="row" layout-align="end center">
+                    <p class="order-id"><i>Order #{{vm.orderId}}</i></p>
+                </div>
                 <div ng-show="vm.showReceiveAddress()" layout="column" layout-align="center center">
                     <h3 class="md-headline" style="text-align: center">Send {{vm.price | number : 6}} {{vm.selectedCurrency.ticker | uppercase}} to</h3>
                     <img src="{{vm.qrCode}}" style="text-align: center">
                     <p class="md-whiteframe-2dp receive-address" ng-bind="vm.receiveAddress"></p>
                 </div>
-                <div ng-hide="vm.orderId == null" layout="row" layout-align="end center">
-                    <p class="order-id"><i>Order #{{vm.orderId}}</i></p>
+                <div ng-show="vm.orderStatus == 'PENDING'" layout="column" layout-align="center center">
+                    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+                    <h3 class="md-headline" style="text-align: center">Transaction Received!</h3>
+                    <h4 class="md-subhead" style="text-align: center"><i>Please wait while the network confirms your transaction. You are free to close this page at any point.</i></h4>
+                </div>
+                <div ng-show="vm.orderStatus == 'PAID'" layout="column" layout-align="center center">
+                    <h3 class="md-headline" style="text-align: center">Transaction Confirmed!</h3>
+                    <h4 class="md-subhead" style="text-align: center"><i>Your transaction has been confirmed by the network.</i></h4>
                 </div>
             </md-card-content>
         </md-card>
